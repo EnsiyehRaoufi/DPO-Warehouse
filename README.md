@@ -121,7 +121,7 @@ python try_model.py out/model "how is WH_0009 at the national_CMS doing overall?
 python try_model.py --base Qwen/Qwen2.5-0.5B-Instruct --base-only --use_full_dataset "how is WH_0009 at the national_CMS doing overall?"
 ```
 
-## testing notes
+## Evaluation notes
 
 ran this a bunch during dev to make sure the rubric actually distinguishes
 good from broken answers across 15 different random
