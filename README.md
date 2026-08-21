@@ -97,8 +97,7 @@ flowchart TD
     LOGFILE -.optional, for the\nregression-cause chart.-> PLOTS
 ```
 
-**A few things worth calling out explicitly, since they're not obvious
-just from the shapes above:**
+**A few things worth calling out explicitly:**
 
 - **`chosen` and `rejected` are both built by code, not written by a
   human or another AI.** `answer()` calls a real tool function against
@@ -110,14 +109,6 @@ just from the shapes above:**
   actually gets labeled `chosen` - in the large majority of cases this
   is the real, uncorrupted answer, since it's rare for a deliberately
   broken response to accidentally score better.
-- **The evaluation report and the "log" file are deliberately
-  separate files.** The report is meant to be read directly - it has
-  the summary numbers and just the handful of most-improved/
-  most-regressed examples. The log has everything: the full text of
-  every single response either model generated during that eval run,
-  and the complete list of every regression (not just the top few) -
-  useful for deeper debugging, but too much to put in the file someone
-  opens first.
 - **`run_info.json`** (written once per training run, inside `out/model`)
   is what lets the evaluation report say which settings (LoRA rank,
   DPO beta, epochs, learning rate, which base model) actually produced
@@ -136,11 +127,8 @@ real data needed to answer it. A separate, simple keyword-matching
 function (`route()`) figures out which of the 5 tools the question
 needs and calls it - entirely in plain Python, no model involved - and
 only *then* does the model get a single prompt containing both the
-real tool result and the question together. This means the model's job
-is narrow and well-defined: turn already-correct data into a clear,
-well-formatted answer - not to figure out what data it needs or how to
-get it. See `README.md`'s "routing" section for the fuller reasoning
-behind this choice over having the model call tools itself.
+real tool result and the question together. See "routing" section for 
+the full reasoning behind this choice over having the model call tools itself.
 
 ```mermaid
 flowchart LR
@@ -173,11 +161,11 @@ flowchart LR
 ```
 
 **Entry points for this path:**
-- `ask.py` - a CLI demo with **no model at all**, just the routing +
+- `ask.py` - a CLI demo with **no model at all**, just the  +
   templated answer, useful for sanity-checking the tool logic itself.
 - `try_model.py` - runs an actual model (either the DPO-tuned one, or
   the original untrained base model via `--base-only`) against one
-  live question, and saves the question, routing decision, full
+  live question, and saves the question,  decision, full
   prompt, and response to a timestamped log file
   (`out/try_model_log_<timestamp>.json`) so past test runs aren't lost.
 
@@ -210,7 +198,7 @@ two datasets derived from it are published on Hugging Face:
 - `assistant.py` - calls the tools, formats FACTS/RECOMMENDATION answers,
   makes broken versions for the rejected side of DPO pairs, AND has the
   `route()` function that maps a raw question to a tool + scope (see
-  "routing" section below)
+  "" section below)
 - `gen_pairs.py` - builds the prompt list (100+), generates pairs, has the
   scoring rubric, picks chosen/rejected
 - `train.py` - DPO training w/ TRL + LoRA
