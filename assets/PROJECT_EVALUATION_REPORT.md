@@ -210,7 +210,7 @@ memory use and training time manageable on a free GPU tier.
   described above, which regressed in every earlier configuration
   tested.
 
-![DPO vs base outcome across 60 held-out prompts](img/win_tie_regress.png)
+![DPO vs base outcome across 60 held-out prompts](<img/win_tie_regress.png width="200" height="200">)
 
 <img src="img/aggregate_score.png" alt="Aggregate eval score" width="600"/>
 
