@@ -14,9 +14,7 @@ import os
 import random
 
 import data_utils as du
-import eval_model as E
 import gen_pairs as G
-import train as T
 
 
 def save_jsonl(rows, path):
@@ -81,6 +79,7 @@ def main():
         return
 
     print("training with DPO...")
+    import train as T
     T.train(f"{args.out}/dpo_pairs.jsonl", args.base_model, f"{args.out}/model",
             epochs=args.epochs, lr=args.lr, beta=args.beta, rank=args.rank)
 
@@ -89,6 +88,7 @@ def main():
         return
 
     print("evaluating base vs dpo model...")
+    import eval_model as E
     E.run_eval(f"{args.out}/model", args.base_model, f"{args.out}/eval_pairs.jsonl",
                f"{args.out}/eval_report.json", records_file=f"{args.out}/records.jsonl",
                max_new=args.max_new_tokens)
