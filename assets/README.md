@@ -8,10 +8,6 @@ than being part of the pipeline itself.
 
 ## Files
 
-- **`ARCHITECTURE.md`** - how the pipeline fits together: the offline
-  flow (data → DPO training pairs → training → evaluation) and the live
-  query flow (a question in, a grounded answer out), each as a diagram
-  plus a plain-language walkthrough.
 - **`PROJECT_EVALUATION_REPORT.md`** - project history, base model
   selection (with the comparison numbers behind that choice), the
   training environment, and the final evaluation results with charts.
