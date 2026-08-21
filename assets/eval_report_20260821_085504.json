@@ -1,0 +1,323 @@
+{
+  "training_settings": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "epochs": 2,
+    "lr": 5e-05,
+    "beta": 0.3,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "pairs_file": "out/dpo_pairs.jsonl",
+    "dataset_fingerprint": "9c294efe9dd7eed9944efbf68b2afeb23d82922cf9190be5aa08a3fc65576891",
+    "trained_at": "2026-08-21 08:47:48"
+  },
+  "field_descriptions": {
+    "training_settings": "the DPO training config that produced the model being evaluated (LoRA rank, beta, epochs, learning rate, base model, dataset fingerprint) - read from run_info.json in the model directory, written by train.py. null if no run_info.json was found (e.g. a --base-only comparison, or an older checkpoint saved before run_info.json existed)",
+    "n_eval": "number of held-out eval prompts scored (never seen during DPO training)",
+    "baseline_score": "avg total rubric score (0-1) of the un-tuned base model's responses, per response then across all prompts - NOT an equal 1/7-per-dimension average: operational_quality is weighted 10%, the other 6 dimensions split the remaining 90% equally (15% each) - see _EVAL_WEIGHTS/weighted_total() in this file for why. gen_pairs.py's score() itself stays equal-weighted; this reweighting is eval-reporting only, doesn't affect DPO training-pair labeling",
+    "post_dpo_score": "same computation as baseline_score, but for the DPO-tuned model",
+    "delta": "post_dpo_score - baseline_score (positive = DPO improved the average)",
+    "win_rate_vs_baseline": "fraction of prompts where DPO's response scored STRICTLY higher than base's on that same prompt (stricter than delta - a positive delta can still have a win rate well under 50% if most prompts tied) = n_improved / n_eval",
+    "n_improved": "count of prompts where the DPO model scored STRICTLY higher than the base model (delta > 0)",
+    "n_tied": "count of prompts where DPO and base scored exactly the same (delta == 0)",
+    "hallucination_rate_before / _after": "fraction of base/DPO responses flagged as fabricating something that doesn't exist: an invented warehouse id (no_hallucination dim), an invented commodity category (no_invented_category dim), an invented issue reason code (no_invented_reason dim), or an invented tier/region label in a compare answer (no_invented_group dim). does NOT include incomplete/wrong-but-real facts - that's factual_correctness's job, not this one",
+    "factual_correctness_before / _after": "= avg(grounding) - fraction of the real tool-output values (numbers, ids) that actually appear correctly in the response text",
+    "tool_use_correctness_before / _after": "accuracy of assistant.route() (a rule-based keyword classifier) at picking the correct one of the 5 tools + correct scope from raw question text. NOT a rubric dimension from score() - computed once via evaluate_tool_selection() and reported under both _before and _after with the SAME value, because routing happens before either model ever runs and neither model's weights can affect it; a _before/_after split would misleadingly imply DPO could move this number. see tool_use_correctness_note and evaluate_tool_selection()'s docstring for why",
+    "tool_use_correctness_note": "explains why tool_use_correctness_before == tool_use_correctness_after by construction (see above)",
+    "operational_quality_before / _after": "= avg(operational_quality) - 1.0 minus 1/3 per structural failure: looping FACTS:/Fact:/RECOMMENDATION: labels, the same number repeated 3+ times, or an unfinished/truncated sentence. NOT a word count. formerly named 'clarity' and formerly a composite with a separate 'useful' dimension - useful's checks are now folded into uncertainty_handling instead (see that entry), so this is a single rubric dimension reported directly, not a composite of two",
+    "uncertainty_handling_before / _after": "= avg(uncertainty) - discloses uncertainty when the data genuinely is incomplete/provisional, and does NOT hedge when the data is solid. also covers what a separate 'useful' dimension used to check (hedge phrases like 'check the system'/'check yourself') - folded in here so hedging is judged once, against whether it was actually warranted, instead of being penalized unconditionally by one dimension while being correctly rewarded by another",
+    "n_regressions": "count of prompts where the DPO model scored LOWER than the base model",
+    "top_improvements / top_regressions": "the top_k prompts with the largest positive/negative score delta, including each response's full per-dimension score breakdown (dims_base/dims_dpo) so you can see exactly which of the 7 dimensions changed and by how much, not just the total"
+  },
+  "n_eval": 60,
+  "baseline_score": 0.8869027777777777,
+  "post_dpo_score": 0.9001944444444444,
+  "delta": 0.013291666666666702,
+  "win_rate_vs_baseline": 0.4666666666666667,
+  "n_improved": 28,
+  "n_tied": 17,
+  "factual_correctness_before": 0.6163888888888889,
+  "factual_correctness_after": 0.6161111111111112,
+  "tool_use_correctness_before": 1.0,
+  "tool_use_correctness_after": 1.0,
+  "tool_use_correctness_note": "identical before/after by construction - tool/function selection in this pipeline is a rule-based keyword router (assistant.route()), not something either model performs, so it cannot differ between base and DPO. see evaluate_tool_selection()'s docstring in this file for details.",
+  "operational_quality_before": 0.6944444444444445,
+  "operational_quality_after": 0.7777777777777779,
+  "hallucination_rate_before": 0.05,
+  "hallucination_rate_after": 0.03333333333333333,
+  "uncertainty_handling_before": 0.8833333333333333,
+  "uncertainty_handling_after": 0.9,
+  "n_regressions": 15,
+  "top_improvements": [
+    {
+      "qid": "T46",
+      "base_score": 0.7041666666666666,
+      "dpo_score": 0.9104166666666667,
+      "delta": 0.20625000000000004,
+      "base_resp": "_medical_supplies', 'risk_score': 11.5, 'risk_factors': ['stockout', 'high_backorder_rate', 'low_fulfilment', 'high_wastage', 'storage_inadequate', 'criticality_critical']}, {'uid': 'regional_warehouse:WH_0030', 'warehouse_id': 'WH_0030', 'warehouse_level': 'regional_warehouse', 'commodity_category': 'controlled_sub",
+      "dpo_resp": "_medical_supplies', 'risk_score': 11.5, 'risk_factors': ['stockout', 'high_backorder_rate', 'low_fulfilment', 'high_wastage', 'storage_inadequate', 'criticality_critical']}]}}\nRecommendation:\nThe warehouse with the highest risk score for vaccines in the peri-urban region is district_store:WH_0087, which has a high stockout and low wastage risk factors. \n\nFacts",
+      "dims_base": {
+        "grounding": 0.25,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 0.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.625,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T214",
+      "base_score": 0.7666666666666666,
+      "dpo_score": 0.9666666666666667,
+      "delta": 0.20000000000000007,
+      "base_resp": " The warehouse level for WH_0050 is national_CMS with an average inventory accuracy of 72.2%, order fulfillment rate of 74.1%, and no issues recorded. However, there are no specific records provided about the overall performance or status of WH_0050 within the national_CMS framework. Therefore, I'm not sure how it's performing overall. Recommendations would be to check the national_CMS dashboard for more comprehensive information on the warehouse's performance",
+      "dpo_resp": " The National CMS (WH_0050) warehouse at WH_0050 is performing well overall based on the provided KPIs. Here are the key metrics:\n\n- Inventory Accuracy Percentage: 72.2%\n- Order Fulfillment Rate Percentage: 74.1%\n- Stock Out Months: 0\n- Damaged Goods Count: 1\n\nThese figures suggest that the warehouse is maintaining good inventory levels and has an efficient order fulfillment process. However,",
+      "dims_base": {
+        "grounding": 0.6666666666666666,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 0.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 1.0,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T145",
+      "base_score": 0.7266666666666667,
+      "dpo_score": 0.82,
+      "delta": 0.09333333333333327,
+      "base_resp": " The warehouse at WH_0099 is experiencing issues with receiving errors due to storage conditions not being adequate, low inventory accuracy of 42.5%, high wastage of 32.1%, and active stockouts in the controlled substance category. These factors are contributing to the failure of fulfillment for this specific commodity. To resolve these issues, it's recommended that the warehouse implement proper storage practices, monitor inventory levels closely, and ensure accurate reporting of stock movements. Additionally, regular audits",
+      "dpo_resp": " The district store at WH_0099 is experiencing issues with receiving errors due to storage conditions not being adequate, low inventory accuracy, high wastage, and active stockouts. These problems are contributing to the failure of fulfillment for controlled substances in July 2024. Recommendations include improving storage conditions, enhancing inventory accuracy, reducing wastage, and addressing any identified stockouts. Further investigation into these factors may be necessary to resolve the issue effectively.",
+      "dims_base": {
+        "grounding": 0.4,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 0.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.8,
+        "operational_quality": 1.0,
+        "uncertainty": 0.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T339",
+      "base_score": 0.8666666666666667,
+      "dpo_score": 0.95,
+      "delta": 0.08333333333333326,
+      "base_resp": " The regional_warehouse warehouse ID of WH_0090 appears to be in the \"regional_warehouse\" category and has an overall status of \"overall\". However, without specific data on inventory accuracy, order fulfillment rate, stockouts, damaged goods, or any other relevant metrics for this particular warehouse, I cannot provide a definitive answer about its performance as a whole. Therefore, based solely on the information provided, I am not able to recommend what level of performance to expect for WH_",
+      "dpo_resp": " The regional_warehouse warehouse ID (WH_0090) at WH_0090 is performing well overall based on the provided KPIs. Here are some key findings:\n\n- Inventory Accuracy: 61.7%\n- Order Fulfillment Rate: 34.5%\n\nThese metrics suggest that the warehouse is managing its inventory and order fulfillment effectively within the regional context. However, there's no indication of any significant issues or outages affecting the warehouse level. \n\n",
+      "dims_base": {
+        "grounding": 0.3333333333333333,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.6666666666666666,
+        "operational_quality": 1.0,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T35",
+      "base_score": 0.8766666666666667,
+      "dpo_score": 0.9366666666666666,
+      "delta": 0.05999999999999994,
+      "base_resp": " The commodity category \"controlled substances\" requires urgent replenishment in the district_store tier. This is indicated by the risk score of 11.5 and multiple factors such as high backorder rate, low fulfillment, high wastage, storage inadequate, criticality critical, etc. These issues indicate that there's an urgent need for replenishment to ensure stock availability and maintain quality control. However, it's important to note that this assessment may vary depending on specific circumstances within the district store. Recommendations would",
+      "dpo_resp": " The district_store tier requires urgent replenishment for vaccines due to high backorders and storage issues. Recommendations include increasing stock levels, implementing better inventory management practices, and enhancing communication with suppliers to ensure timely delivery. Additionally, considering alternative sources of supply may be necessary to mitigate shortages. \n\nFacts:\n- The warehouse is located at WH_0028\n- The risk score for vaccines is 11.5\n- The warehouse level is set to district_store\n\nRecommendation:\nIncrease stock",
+      "dims_base": {
+        "grounding": 0.4,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.8,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    }
+  ],
+  "top_regressions": [
+    {
+      "qid": "T69",
+      "base_score": 0.9666666666666667,
+      "dpo_score": 0.85,
+      "delta": -0.1166666666666667,
+      "base_resp": " Warehouses in the regional_warehouse tier are failing due to stock record discrepancies and theft pilferage issues. These problems can lead to overstocking or understocking of inventory, which may result in lost sales or damaged goods. Additionally, receiving errors and dispatch errors can cause delays in delivery, leading to potential loss of revenue for the warehouse. The dominant issue is stock record discrepancy with 6 out of 72 records being incorrect, indicating that there might be an imbalance between actual and recorded",
+      "dpo_resp": " Warehouses in the regional_warehouse tier are experiencing issues related to stock record discrepancies and receiving errors. These problems can be attributed to various factors such as inconsistent inventory tracking, lack of timely updates, or miscommunication between different departments involved in managing stock levels. To address these challenges, it's crucial for warehouse assistants to implement robust systems for accurate record-keeping and ensure efficient communication among team members responsible for maintaining stock levels. Regular audits and training sessions on inventory management practices can also help mitigate these issues.",
+      "dims_base": {
+        "grounding": 1.0,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.0,
+        "operational_quality": 1.0,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T252",
+      "base_score": 0.95,
+      "dpo_score": 0.8666666666666667,
+      "delta": -0.08333333333333326,
+      "base_resp": " laboratory_reagents\n\nExplanation for a FACTS answer:\nThe fact that there are 16 orders backordered at WH_0079 with a backorder rate of 28.6% indicates that the laboratory reagents category is experiencing the highest number and percentage of backorders among all categories at this warehouse level. This suggests that the lab may be facing challenges in managing or securing these items, possibly due to supply chain issues, inventory management problems, or other factors affecting their availability.",
+      "dpo_resp": " The category with the highest number of backorders is \"laboratory reagents\", with 16 orders backordered. This indicates that laboratory reagents are experiencing the most significant demand and may be subject to higher rates of backordering compared to other categories like commodities or materials. Recommendation: Monitor laboratory reagent stock levels closely for potential backorders. Adjust inventory accordingly as needed. Further investigation into specific lab conditions might also be warranted. Fact: Backorders are typically associated with high demand in certain categories",
+      "dims_base": {
+        "grounding": 0.6666666666666666,
+        "operational_quality": 1.0,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.3333333333333333,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T368",
+      "base_score": 0.97,
+      "dpo_score": 0.9099999999999999,
+      "delta": -0.06000000000000005,
+      "base_resp": " Yes, WH_0043 is at the regional_warehouse and is at risk of running short on anything due to high wastage and criticality medium factors. \n\nRecommendation: Further investigation into these factors would be recommended to mitigate potential risks associated with the inventory level in WH_0043. \n\nFACTS:\n- The warehouse has a commodity category of PPE_IPC_supplies.\n- The risk score for this specific factor is 1.5 out of 5.\n",
+      "dpo_resp": " Yes, WH_0043 is at the regional_warehouse and is at high risk of running short on PPE supplies due to high wastage and criticality medium factors. Recommendation: Implement measures to reduce waste and improve supply chain efficiency for better inventory management.",
+      "dims_base": {
+        "grounding": 0.8,
+        "operational_quality": 1.0,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.4,
+        "operational_quality": 1.0,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T247",
+      "base_score": 0.9416666666666667,
+      "dpo_score": 0.8833333333333333,
+      "delta": -0.05833333333333335,
+      "base_resp": " The category with the most backorders at WH_0016 at the national_CMS is IV_fluids. This can be determined by looking at the \"commodity_category\" field in the returned JSON object, where it shows \"IV_fluids\". The value of 17 indicates that there are 17 orders backordered for this commodity category at WH_0016. The backorder rate percentage (32.7%) also provides insight into the proportion of orders being",
+      "dpo_resp": " The category with the highest number of backorders is IV_fluids, with 17 orders backordered. Recommendation: Prioritize inventory management for IV_fluids to reduce backorders and ensure smooth operations in WH_0016. Fact: WH_0016 is part of the national_CMS warehouse. Recommendation: Regularly monitor and adjust inventory levels to maintain optimal stock levels for IV_fluids. Fact: Backorders are calculated based on the total number of orders placed by customers",
+      "dims_base": {
+        "grounding": 0.8333333333333334,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.6666666666666666,
+        "operational_quality": 0.33333333333333337,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    },
+    {
+      "qid": "T229",
+      "base_score": 0.9666666666666667,
+      "dpo_score": 0.9249999999999999,
+      "delta": -0.04166666666666674,
+      "base_resp": " The warehouse level for WH_0003 in the national_CMS is performing well overall with an average inventory accuracy of 76.8%, order fulfillment rate of 64.4%, and no stockouts reported within the last month. However, there are issues identified as pest infestations (issue_counts['pest_infestation'] = 1). This suggests that there may be some ongoing issues or problems affecting the warehouse's performance. \n\nRecommendation: It would be beneficial to",
+      "dpo_resp": " Based on the provided information:\n\n- The warehouse ID for WH_0003 is \"WH_0003\"\n- The warehouse level is \"national_CMS\"\n\nThe average inventory accuracy percentage (avg_inventory_accuracy_pct) is 76.8%, which suggests there's some issue with stock levels.\nThere are no specific issues mentioned in the available data that would indicate an overall poor performance of WH_0003 across all warehouses within the national_CMS.\n\nRecommendation:\n",
+      "dims_base": {
+        "grounding": 1.0,
+        "operational_quality": 0.6666666666666667,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      },
+      "dims_dpo": {
+        "grounding": 0.5,
+        "operational_quality": 1.0,
+        "uncertainty": 1.0,
+        "no_hallucination": 1.0,
+        "no_invented_category": 1.0,
+        "no_invented_reason": 1.0,
+        "no_invented_group": 1.0
+      }
+    }
+  ],
+  "tool_selection_n": 60,
+  "tool_selection_misses": []
+}
