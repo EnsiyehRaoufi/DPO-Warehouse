@@ -210,13 +210,13 @@ memory use and training time manageable on a free GPU tier.
   described above, which regressed in every earlier configuration
   tested.
 
-<img src="img/win_tie_regress.png" alt="DPO vs base outcome across 60 held-out prompts" width="600"/>
+<img src="img/win_tie_regress.png" alt="DPO vs base outcome across 60 held-out prompts" width="550"/>
 
-<img src="img/aggregate_score.png" alt="Aggregate eval score" width="600"/>
+<img src="img/aggregate_score.png" alt="Aggregate eval score" width="500"/>
 
 ### What's still causing the remaining regressions
 
-<img src="img/regression_dimension_breakdown.png" alt="What's driving the regressions" width="600"/>
+<img src="img/regression_dimension_breakdown.png" alt="What's driving the regressions" width="650"/>
 
 Of the 15 regressed prompts, 13 involve grounding and 4 involve
 operational quality (with some overlap). The dominant pattern in these
