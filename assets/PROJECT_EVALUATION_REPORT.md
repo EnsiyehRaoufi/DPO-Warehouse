@@ -216,7 +216,7 @@ memory use and training time manageable on a free GPU tier.
 
 ### What's still causing the remaining regressions
 
-<img src="img/regression_dimension_breakdown.png" alt="What's driving the regressions" width="500"/>
+<img src="img/regression_dimension_breakdown.png" alt="What's driving the regressions" width="600"/>
 
 Of the 15 regressed prompts, 13 involve grounding and 4 involve
 operational quality (with some overlap). The dominant pattern in these
