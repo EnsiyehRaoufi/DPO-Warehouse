@@ -152,11 +152,7 @@ penalized it as if the value were wrong.
 
 fixed: numeric comparison now allows a small tolerance (0.05) instead of
 requiring an exact string match, and string comparison normalizes case
-and underscore-vs-space before comparing. verified this doesn't create
-false positives - a genuinely wrong tier name or number is still caught
-(tested directly: swapping `national_CMS` for `regional_warehouse`, or
-`82.0` for `45`, both still correctly score low). the existing 5460/5460
-stress test still passes unchanged after the fix.
+and underscore-vs-space before comparing. 
 
 ## faithfulness vs hallucination - what this actually measures
 
