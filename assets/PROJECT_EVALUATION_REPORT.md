@@ -212,7 +212,7 @@ memory use and training time manageable on a free GPU tier.
 
 <img src="img/win_tie_regress.png" alt="DPO vs base outcome across 60 held-out prompts" width="550"/>
 
-<img src="img/aggregate_score.png" alt="Aggregate eval score" width="500"/>
+<img src="img/aggregate_score.png" alt="Aggregate eval score" width="450"/>
 
 ### What's still causing the remaining regressions
 
