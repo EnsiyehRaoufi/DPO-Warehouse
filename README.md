@@ -197,7 +197,7 @@ python run.py --base-model Qwen/Qwen2.5-0.5B-Instruct --min-prompts 150 --data-d
 ```
 
 Or run against the bundled 210-row sample instead - no CSV download
-needed, useful for a end-to-end check of the whole pipeline (this is done in this work):
+needed, useful for an end-to-end check of the whole pipeline (this is done in this work):
 
 ```
 !python run.py --sample --data-dir data --base-model Qwen/Qwen2.5-0.5B-Instruct --min-prompts 150 --out out --max-new-tokens 100
@@ -232,23 +232,23 @@ python ask.py "any active stockouts?"
 python ask.py "why is WH_0009 at the national_CMS failing fulfillment for vaccines?"
 ```
 
-Or try infering the tuned or based model yourself:
+Or try inferring the tuned or base model yourself:
 
 ```
 python try_model.py out/model "how is WH_0009 at the national_CMS doing overall?" --base Qwen/Qwen2.5-0.5B-Instruct --use_full_dataset
 python try_model.py --base Qwen/Qwen2.5-0.5B-Instruct --base-only --use_full_dataset "how is WH_0009 at the national_CMS doing overall?"
 ```
 
-## About the dataset
+## Datasets
 
 Source dataset: [`electricsheepafrica/warehouse-inventory-management`](https://huggingface.co/datasets/electricsheepafrica/warehouse-inventory-management/tree/main/data)
 
 
-Two datasets derived from it are published on Hugging Face:
+Two datasets derived from the source data are published on Hugging Face:
 [`EnRaoufi/warehouse-inventory-stratified-sample`](https://huggingface.co/datasets/EnRaoufi/warehouse-inventory-stratified-sample)
-(the curated sample `build_sample.py` produces) and
+(the curated sample that `build_sample.py` produces) and
 [`EnRaoufi/warehouse-dpo-preference-pairs`](https://huggingface.co/datasets/EnRaoufi/warehouse-dpo-preference-pairs)
-(the DPO `{prompt, chosen, rejected}` pairs `gen_pairs.py` produces from it).
+(the DPO `{prompt, chosen, rejected}` pairs that `gen_pairs.py` produces from it).
 
 ## Python scripts
 
