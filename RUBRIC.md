@@ -111,8 +111,8 @@ carries the full 7-dim breakdown for both models under
 |---|---|---|
 | `factual_correctness_*` | = | `avg(grounding)` |
 | `tool_use_correctness_*` | = | NOT from `score()` - `evaluate_tool_selection()`'s router accuracy, identical value in `_before` and `_after` by construction |
-| `operational_quality_*` | = | `avg(operational_quality)` - one rubric dimension directly (formerly a composite of `clarity` + `useful`; `useful` was folded into `uncertainty` instead - see above) |
-| `uncertainty_handling_*` | = | `avg(uncertainty)` - now also covers what `useful` used to check |
+| `operational_quality_*` | = | `avg(operational_quality)` - one rubric dimension directly |
+| `uncertainty_handling_*` | = | `avg(uncertainty)` |
 | `hallucination_rate_*` | = | fraction of responses where `no_hallucination < 1` OR `no_invented_category < 1` OR `no_invented_reason < 1` OR `no_invented_group < 1` - fabrication only, does NOT include `grounding < 0.5` (that would conflate incompleteness with fabrication - removed) |
 | `baseline_score` / `post_dpo_score` | = | a WEIGHTED average of all 7 dims - NOT equal 1/7 each. `operational_quality` is weighted 10%, the other 6 split the remaining 90% equally (15% each). see `eval_model.py`'s `_EVAL_WEIGHTS`/`weighted_total()` for the exact numbers and the reasoning - `gen_pairs.py`'s `score()` (used for DPO training-pair labeling) stays equal-weighted; this reweighting is eval-reporting only |
 
