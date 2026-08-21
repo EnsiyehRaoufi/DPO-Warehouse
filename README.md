@@ -244,10 +244,10 @@ python try_model.py --base Qwen/Qwen2.5-0.5B-Instruct --base-only --use_full_dat
 Source dataset: [`electricsheepafrica/warehouse-inventory-management`](https://huggingface.co/datasets/electricsheepafrica/warehouse-inventory-management/tree/main/data)
 
 
-Two datasets derived from the source data are published on Hugging Face:
+- Two datasets derived from the source data are published on Hugging Face:
 [`EnRaoufi/warehouse-inventory-stratified-sample`](https://huggingface.co/datasets/EnRaoufi/warehouse-inventory-stratified-sample)
 (the curated sample that `build_sample.py` produces) and
-[`EnRaoufi/warehouse-dpo-preference-pairs`](https://huggingface.co/datasets/EnRaoufi/warehouse-dpo-preference-pairs)
+- [`EnRaoufi/warehouse-dpo-preference-pairs`](https://huggingface.co/datasets/EnRaoufi/warehouse-dpo-preference-pairs)
 (the DPO `{prompt, chosen, rejected}` pairs that `gen_pairs.py` produces from it).
 
 ## Python scripts
@@ -275,8 +275,9 @@ Two datasets derived from the source data are published on Hugging Face:
 - `build_sample.py` - regenerates warehouse_sample.jsonl from the real 3
   CSVs (`python build_sample.py --data-dir data`). 
 
-## Routing (how the "LLM" picks the right tool)
+## Routing
 
+**how the "LLM" picks the right tool**:
 `assistant.route()` is a **plain keyword classifier**, not the model doing real function-calling.
 It looks at the raw question text for words like "backorder", "stockout",
 "shortage"/"risk", pulls out a warehouse id via regex (`WH_\d+`) and a
