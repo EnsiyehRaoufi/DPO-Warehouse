@@ -1,0 +1,27 @@
+# exact versions confirmed working end-to-end on real GPU training
+# (verified: full 30k-record dataset -> DPO training completed successfully,
+# local machine with a CUDA-11.4-era driver + torch==2.13.0/cu13 build)
+datasets==5.0.1
+transformers==5.15.0
+trl==1.10.0
+peft==0.20.0
+accelerate==1.14.0
+torch==2.13.0
+
+# needed on top of peft>=0.19 even though this project never uses
+# quantization - PEFT's LoRA module dispatcher checks torchao's version as
+# part of injecting the adapter, and errors out below this version even
+# for plain LoRA. found on Colab (T4 GPU): PEFT 0.19.1 there raised
+# "ImportError: Found an incompatible version of torchao. Found version
+# 0.10.0, but only versions above 0.16.0 are supported" until this was
+# added explicitly.
+torchao>=0.16.0
+
+# NOTE ON COLAB: torch is GPU-driver-specific - do NOT blindly install the
+# torch==2.13.0 pin above on Colab or any other machine with its own
+# pre-matched driver/torch pairing. Check what's already installed and
+# working (torch.cuda.is_available()) before touching it; installing a
+# torch build compiled for a different CUDA version than the local driver
+# supports is exactly what broke this locally on a machine with an older
+# NVIDIA driver. Colab's own pre-installed torch (observed: 2.11.0+cu128)
+# worked correctly and should be left alone rather than overwritten.
