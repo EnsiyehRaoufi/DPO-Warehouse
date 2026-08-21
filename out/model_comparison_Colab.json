@@ -1,0 +1,70 @@
+{
+  "n_eval_prompts": 20,
+  "candidates": {
+    "Qwen/Qwen2.5-0.5B-Instruct": {
+      "avg_score": 0.809702380952381,
+      "factual_correctness": 0.2679166666666667,
+      "operational_quality": 0.7000000000000001,
+      "uncertainty_handling": 0.9,
+      "hallucination_rate": 0.2,
+      "sample_responses": [
+        {
+          "qid": "T1",
+          "response": " The commodity categories that are currently stocked out are:\n\n- Laboratory reagents\n- Surgical supplies\n- Medical devices consumables\n- Malaria commodities\n\nThese are the specific commodity categories that have been identified as being out of stock at the current time. There are no other commodity categories listed in this list, so they are all currently available for purchase or use. This information is provided by the warehouse assistant based on the latest inventory status reported to them. No further recommendations can be made without additional data or"
+        },
+        {
+          "qid": "T2",
+          "response": " Yes, there are active stockouts as indicated by the fact that there are 9635 more items affected by stockouts compared to the total number of facilities affected by stockouts (which is 151 + 126 + 120 + 112 + 111 + ...).\n\nRecommendation:\nIf you need to know about specific stockouts or have questions about them, I would recommend reaching out to your supervisor or warehouse manager for assistance. They"
+        }
+      ]
+    },
+    "HuggingFaceTB/SmolLM2-360M-Instruct": {
+      "avg_score": 0.7699404761904762,
+      "factual_correctness": 0.022916666666666665,
+      "operational_quality": 0.7666666666666667,
+      "uncertainty_handling": 1.0,
+      "hallucination_rate": 0.4,
+      "sample_responses": [
+        {
+          "qid": "T1",
+          "response": ""
+        },
+        {
+          "qid": "T2",
+          "response": " no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA: no\n\nA:"
+        }
+      ]
+    },
+    "Qwen/Qwen2.5-1.5B-Instruct": {
+      "avg_score": 0.7802976190476191,
+      "factual_correctness": 0.29541666666666666,
+      "operational_quality": 0.7166666666666667,
+      "uncertainty_handling": 1.0,
+      "hallucination_rate": 0.55,
+      "sample_responses": [
+        {
+          "qid": "T1",
+          "response": " The items that are currently stocked out are laboratory reagents, surgical supplies, medical devices consumables, malaria commodities, IV fluids, and many others listed in the data provided. These items have been affected by stockouts across different warehouses at various levels of the national CMS system. \n\nFACTS:\n- Stockouts exist for multiple categories including laboratory reagents, surgical supplies, medical devices consumables, malaria commodities, and IV fluids.\n- There is no specific recommendation or action to take based on this information"
+        },
+        {
+          "qid": "T2",
+          "response": " FACTS\n\nThe provided data shows that there are indeed active stockouts across multiple warehouses, affecting various categories of commodities such as laboratory reagents, surgical supplies, medical devices consumables, malaria commodities, IV fluids, among others. The number of affected facilities varies significantly for each commodity category but collectively represents over 10,000 affected locations. This indicates ongoing issues with inventory levels in these warehouses. \n\nRECOMMENDATION:\nGiven the high volume of affected facilities (over 10"
+        }
+      ]
+    }
+  },
+  "ranking": [
+    [
+      "Qwen/Qwen2.5-0.5B-Instruct",
+      0.809702380952381
+    ],
+    [
+      "Qwen/Qwen2.5-1.5B-Instruct",
+      0.7802976190476191
+    ],
+    [
+      "HuggingFaceTB/SmolLM2-360M-Instruct",
+      0.7699404761904762
+    ]
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "epochs": 2,
+  "lr": 5e-05,
+  "beta": 0.3,
+  "lora_rank": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj"
+  ],
+  "pairs_file": "out/dpo_pairs.jsonl",
+  "dataset_fingerprint": "9c294efe9dd7eed9944efbf68b2afeb23d82922cf9190be5aa08a3fc65576891",
+  "trained_at": "2026-08-21 08:47:48"
+}
