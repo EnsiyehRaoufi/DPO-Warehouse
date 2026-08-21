@@ -182,26 +182,20 @@ flowchart LR
 
 `base_model` (default `Qwen/Qwen2.5-0.5B-Instruct`) was picked as a
 reasonable-sounding default - small, open, instruction-tuned, works
-cleanly with TRL/PEFT. To verify it:
+cleanly with TRL/PEFT. To verify it against alternatives without
+downloading the full CSVs first:
 
 ```
-!python compare_models.py
+!python compare_models.py --sample
 ```
 
-Full run (needs the 3 real CSVs dropped into `data/` first - see "about the
-dataset" above for exact filenames, or point `--data-dir` at wherever you
-put them):
+(drop `--sample` once you have the real CSVs in `data/`, to compare on
+the full dataset instead.)
 
-```
-python run.py --base-model Qwen/Qwen2.5-0.5B-Instruct --min-prompts 150 --data-dir data
-```
-
-Or run against the bundled 210-row sample instead - no CSV download
-needed, useful for an end-to-end check of the whole pipeline (this is done in this work):
-
-```
-!python run.py --sample --data-dir data --base-model Qwen/Qwen2.5-0.5B-Instruct --min-prompts 150 --out out --max-new-tokens 100
-```
+For the exact commands to run the full pipeline against either the real
+3-tier CSVs, the 210-row sample, or pre-generated DPO pairs - including
+where each file needs to be placed - see
+[`data/README.md`](data/README.md).
 
 This writes to `out/`:
 - `records.jsonl` - the normalized data
@@ -213,10 +207,14 @@ This writes to `out/`:
   own freshly-generated text, not the pre-built candidates.
 - `model/` - the trained adapter + `run_info.json` (config + dataset
   fingerprint) + `metrics.json` (training curve)
-- `eval_report.json` - before/after comparison: baseline_score,
+- `eval_report_<timestamp>.json` - before/after comparison: baseline_score,
   post_dpo_score, delta, win_rate_vs_baseline, hallucination rate
   before/after, factual correctness, tool use correctness, uncertainty
   handling, top improvements/regressions, plus tool_selection_accuracy.
+  Timestamped so re-running doesn't overwrite a previous report.
+- `eval_report_log_<timestamp>.json` - the companion to the report above:
+  every response either model generated (not just the top few shown in
+  the report), plus the full regression list.
 
 You can also just run pieces separately:
 
@@ -257,7 +255,7 @@ To see where to place the datasets after dowloading, please refer to [`data/READ
 - `assistant.py` - calls the tools, formats FACTS/RECOMMENDATION answers,
   makes broken versions for the rejected side of DPO pairs, AND has the
   `route()` function that maps a raw question to a tool + scope (see
-  "" section below)
+  "Routing" section below)
 - `gen_pairs.py` - builds the prompt list (100+), generates pairs, has the
   scoring rubric, picks chosen/rejected
 - `train.py` - DPO training w/ TRL + LoRA
@@ -267,8 +265,8 @@ To see where to place the datasets after dowloading, please refer to [`data/READ
 - `ask.py` - live demo: `python ask.py "any active stockouts?"` - actually
   routes a raw question and answers it, no pre-known intent
 - `compare_models.py` - zero-shot comparison of candidate base models
-  BEFORE committing to one for DPO training (see "picking a base model"
-  below)
+  BEFORE committing to one for DPO training (see "Running the Pipelines"
+  above)
 - `data/warehouse_sample.jsonl` - a 210-row real subset
   (pulled straight from the actual CSVs, with coverage of every issue type
   and all 3 warehouse levels). 
@@ -301,4 +299,5 @@ The full pipeline that produced the final evaluation results
 on the same configuration. Both runs produced stable DPO training outcomes 
 and evaluation results, with no meaningful run-to-run variation - reasonable
  confidence the reported numbers reflect the actual behavior of this setup, 
+ not a lucky single run.
  not a lucky single run.
