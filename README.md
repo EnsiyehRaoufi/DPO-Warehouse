@@ -241,11 +241,9 @@ python try_model.py --base Qwen/Qwen2.5-0.5B-Instruct --base-only --use_full_dat
 
 ## Datasets
 
-Source dataset: [`electricsheepafrica/warehouse-inventory-management`](https://huggingface.co/datasets/electricsheepafrica/warehouse-inventory-management/tree/main/data)
-
-
-- Two datasets derived from the source data are published on Hugging Face:
-[`EnRaoufi/warehouse-inventory-stratified-sample`](https://huggingface.co/datasets/EnRaoufi/warehouse-inventory-stratified-sample)
+Based on source dataset: [`electricsheepafrica/warehouse-inventory-management`](https://huggingface.co/datasets/electricsheepafrica/warehouse-inventory-management/tree/main/data), 
+two datasets derived from the source data are published on Hugging Face:
+- [`EnRaoufi/warehouse-inventory-stratified-sample`](https://huggingface.co/datasets/EnRaoufi/warehouse-inventory-stratified-sample)
 (the curated sample that `build_sample.py` produces) and
 - [`EnRaoufi/warehouse-dpo-preference-pairs`](https://huggingface.co/datasets/EnRaoufi/warehouse-dpo-preference-pairs)
 (the DPO `{prompt, chosen, rejected}` pairs that `gen_pairs.py` produces from it).
