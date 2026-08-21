@@ -248,6 +248,8 @@ two datasets derived from the source data are published on Hugging Face:
 - [`EnRaoufi/warehouse-dpo-preference-pairs`](https://huggingface.co/datasets/EnRaoufi/warehouse-dpo-preference-pairs)
 (the DPO `{prompt, chosen, rejected}` pairs that `gen_pairs.py` produces from it).
 
+To see where to place the datasets after dowloading, please refer to [`data/README.md`](data/README.md).
+
 ## Python scripts
 
 - `data_utils.py` - loads the data, has the tool functions (get_stockouts,
