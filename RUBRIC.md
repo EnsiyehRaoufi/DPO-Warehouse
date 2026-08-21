@@ -57,10 +57,8 @@ staying honest that this specific number cannot move between the two.
 ## filter vs. compare vs. single-warehouse - the three ways a question can be scoped
 
 all 5 tools - `get_stockouts`/`get_backorders`/`rank_shortage_risk`
-(dataset-wide by nature) and now `get_kpis`/`get_dominant_issue` too
-(generalized from the single-warehouse-only `get_warehouse_kpis`/
-`explain_inventory_issue`) - can each be asked the same 5 ways, resolved
-by `assistant.resolve_dataset_wide_scope()`:
+(dataset-wide by nature) and `get_kpis`/`get_dominant_issue` too 
+can each be asked the same 5 ways, resolved by `assistant.resolve_dataset_wide_scope()`:
 
 | question | scope shape | example |
 |---|---|---|
