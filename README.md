@@ -8,7 +8,7 @@ before/after.
 
 ## reports and docs
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) - how the pipeline fits together,
+- [`assets/ARCHITECTURE.md`](assets/ARCHITECTURE.md) - how the pipeline fits together,
   from raw data through to a trained model and a live answer to a question.
 - [`RUBRIC.md`](RUBRIC.md) - the full 7-dimension scoring rubric used to
   build DPO preference pairs and to evaluate the trained model.
