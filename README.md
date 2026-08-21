@@ -1,4 +1,4 @@
-# warehouse short-order assistant - DPO pipeline
+# Warehouse short-order assistant - DPO pipeline
 
 Loads a warehouse dataset, builds some tool functions
 over it, has an assistant answer questions using those tools, makes
